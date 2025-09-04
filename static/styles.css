@@ -1,0 +1,51 @@
+:root{
+  --bg: #0b1220;
+  --card: #101a33;
+  --muted: #8da2c0;
+  --accent: #5b9cff;
+  --ok: #2ecc71;
+  --warn: #f1c40f;
+  --danger: #e74c3c;
+}
+
+body{
+  background: radial-gradient(1200px 600px at 20% -10%, #13203a 0%, #0b1220 60%);
+  color: #e6eefc;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Helvetica,sans-serif;
+  min-height: 100vh;
+}
+
+.navbar{
+  background: rgba(16,26,51,0.7) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(16,26,51,0.9), rgba(16,26,51,0.7));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.3);
+  border-radius: 18px;
+}
+
+.btn-accent{
+  background: var(--accent);
+  border: none;
+  color: white;
+  box-shadow: 0 10px 30px rgba(91,156,255,0.35);
+}
+.btn-accent:hover{ filter: brightness(1.05); }
+
+.stat{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.footer{
+  color: var(--muted);
+}
+
+a, .link{ color: #9bc0ff; }
+a:hover{ color: #cfe0ff; }

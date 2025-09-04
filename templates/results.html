@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card p-4">
+      <h1 class="h4 mb-3">Live Results</h1>
+      <canvas id="barChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card p-4">
+      <h2 class="h5 mb-3">Turnout</h2>
+      <div class="stat">
+        <div class="d-flex justify-content-between">
+          <span>Registered voters</span><strong id="regCount">{{ stats.users }}</strong>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <span>Total votes</span><strong id="voteCount">{{ stats.votes }}</strong>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <span>Turnout</span><strong id="turnoutPct">{{ '0%' }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ctx = document.getElementById('barChart');
+let chart;
+
+function render(data){
+  const labels = data.labels;
+  const counts = data.counts;
+
+  if(chart){ chart.destroy(); }
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels, 
+      datasets: [ { label: 'Votes', data: counts } ]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true, precision: 0 } }
+    }
+  });
+
+  // turnout
+  const reg = {{ stats.users }};
+  const votes = data.total_votes;
+  const pct = reg ? Math.round((votes/reg)*100) : 0;
+  document.getElementById('regCount').textContent = reg;
+  document.getElementById('voteCount').textContent = votes;
+  document.getElementById('turnoutPct').textContent = pct + '%';
+}
+
+window.updateResults = render;
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h1 class="h4 mb-3">Cast Your Vote</h1>
+      {% if not settings.is_open %}
+        <div class="alert alert-warning">The election is currently closed. Please check back later.</div>
+      {% endif %}
+      <form method="post">
+        {{ form.hidden_tag() }}
+        {% for c in candidates %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="candidate_id" id="c{{ c.id }}" value="{{ c.id }}" required {{ 'disabled' if not settings.is_open }}>
+            <label class="form-check-label" for="c{{ c.id }}">
+              <strong>{{ c.name }}</strong><br>
+              <small class="text-muted">{{ c.manifesto }}</small>
+            </label>
+          </div>
+        {% else %}
+          <p class="text-muted">No candidates yet. Admin must add candidates.</p>
+        {% endfor %}
+        <button class="btn btn-accent mt-3" type="submit" {{ 'disabled' if not settings.is_open }}>Submit Vote</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

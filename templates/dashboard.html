@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h1 class="h4 mb-3">Your Account</h1>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+          <span>Username</span><strong>{{ current_user.username }}</strong>
+        </li>
+        <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+          <span>Email</span><strong>{{ current_user.email }}</strong>
+        </li>
+        <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+          <span>Status</span><strong class="{{ 'text-success' if not current_user.has_voted else 'text-warning' }}">{{ 'Not Voted' if not current_user.has_voted else 'Voted' }}</strong>
+        </li>
+      </ul>
+    </div>
+    <div class="card p-4 mt-3">
+      <h2 class="h5 mb-3">Change Password</h2>
+      <form method="post" action="{{ url_for('change_password') }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">{{ form.current_password.label }} {{ form.current_password(class="form-control") }}</div>
+        <div class="mb-3">{{ form.new_password.label }} {{ form.new_password(class="form-control") }}</div>
+        <div class="mb-3">{{ form.confirm_new.label }} {{ form.confirm_new(class="form-control") }}</div>
+        <button class="btn btn-outline-light" type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h2 class="h5">Quick Links</h2>
+      <div class="d-flex gap-2">
+        <a class="btn btn-accent" href="{{ url_for('vote') }}">Go Vote</a>
+        <a class="btn btn-outline-light" href="{{ url_for('results') }}">Live Results</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

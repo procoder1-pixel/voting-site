@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h1 class="h4 mb-3">Admin – Election Controls</h1>
+      <form method="post" action="{{ url_for('toggle_election') }}">
+        {{ form.hidden_tag() }}
+        <p class="mb-2">Election is currently: 
+          <strong class="{{ 'text-success' if settings.is_open else 'text-warning' }}">{{ 'OPEN' if settings.is_open else 'CLOSED' }}</strong>
+        </p>
+        <button class="btn btn-outline-light" type="submit">{{ 'Close' if settings.is_open else 'Open' }} Election</button>
+      </form>
+    </div>
+
+    <div class="card p-4 mt-3">
+      <h2 class="h5 mb-3">Add Candidate</h2>
+      <form method="post" action="{{ url_for('add_candidate') }}">
+        {{ cand_form.hidden_tag() }}
+        <div class="mb-3">{{ cand_form.name.label }} {{ cand_form.name(class="form-control") }}</div>
+        <div class="mb-3">{{ cand_form.manifesto.label }} {{ cand_form.manifesto(class="form-control", rows=3) }}</div>
+        <button class="btn btn-accent" type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h2 class="h5 mb-3">Current Candidates</h2>
+      <ul class="list-group list-group-flush">
+        {% for c in candidates %}
+        <li class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-start">
+          <div>
+            <div class="fw-bold">{{ c.name }}</div>
+            <small class="text-muted">{{ c.manifesto }}</small>
+          </div>
+          <form method="post" action="{{ url_for('delete_candidate', cid=c.id) }}">
+            {{ form.hidden_tag() }}
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </li>
+        {% else %}
+          <li class="list-group-item bg-transparent text-white">No candidates yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,51 +1,165 @@
-:root{
-  --bg: #0b1220;
-  --card: #101a33;
-  --muted: #8da2c0;
-  --accent: #5b9cff;
-  --ok: #2ecc71;
-  --warn: #f1c40f;
-  --danger: #e74c3c;
-}
+ /* General page styling */
+ body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   background-color: #0d1117;
+   /* dark background */
+   color: #e6edf3;
+   /* soft white text */
+   margin: 0;
+   padding: 0;
+ }
 
-body{
-  background: radial-gradient(1200px 600px at 20% -10%, #13203a 0%, #0b1220 60%);
-  color: #e6eefc;
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Helvetica,sans-serif;
-  min-height: 100vh;
-}
+ /* Headings */
+ h1,
+ h2,
+ h3,
+ h4 {
+   color: #58a6ff;
+   /* bright blue for headings */
+   font-weight: bold;
+   letter-spacing: 1px;
+ }
 
-.navbar{
-  background: rgba(16,26,51,0.7) !important;
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
+ /* Labels like "Name", "Manifesto" */
+ label {
+   font-size: 15px;
+   font-weight: 600;
+   color: #f0f6fc;
+   /* clean white */
+   margin-bottom: 6px;
+   display: inline-block;
+ }
 
-.card{
-  background: linear-gradient(180deg, rgba(16,26,51,0.9), rgba(16,26,51,0.7));
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 10px 35px rgba(0,0,0,0.3);
-  border-radius: 18px;
-}
+ /* Input fields */
+ input[type="text"],
+ textarea {
+   width: 100%;
+   padding: 10px;
+   border-radius: 8px;
+   border: 1px solid #30363d;
+   background-color: #161b22;
+   color: #e6edf3;
+   font-size: 14px;
+   margin-bottom: 12px;
+   transition: border 0.3s;
+ }
 
-.btn-accent{
-  background: var(--accent);
-  border: none;
-  color: white;
-  box-shadow: 0 10px 30px rgba(91,156,255,0.35);
-}
-.btn-accent:hover{ filter: brightness(1.05); }
+ input[type="text"]:focus,
+ textarea:focus {
+   border: 1px solid #58a6ff;
+   outline: none;
+ }
 
-.stat{
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 14px 16px;
-}
+ /* Buttons */
+ button,
+ .btn,
+ input[type="submit"] {
+   background-color: #238636;
+   color: white;
+   font-weight: bold;
+   padding: 10px 18px;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: background 0.3s;
+ }
 
-.footer{
-  color: var(--muted);
-}
+ button:hover,
+ .btn:hover,
+ input[type="submit"]:hover {
+   background-color: #2ea043;
+ }
 
-a, .link{ color: #9bc0ff; }
-a:hover{ color: #cfe0ff; }
+ /* Delete button */
+ button.delete,
+ .btn-delete {
+   background-color: #d73a49;
+ }
+
+ button.delete:hover,
+ .btn-delete:hover {
+   background-color: #f85149;
+ }
+
+ /* Panels / Boxes */
+ .container,
+ .card,
+ .section {
+   background-color: #161b22;
+   padding: 20px;
+   border-radius: 12px;
+   margin-bottom: 20px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+ }
+
+ /* Candidate Cards */
+ .candidate-card {
+   background-color: #1c2128;
+   padding: 15px;
+   margin-bottom: 15px;
+   border-radius: 10px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+   list-style: none;
+ }
+
+ /* Candidate name */
+ .candidate-card strong {
+   font-size: 18px;
+   color: #58a6ff;
+   /* bright blue */
+ }
+
+ /* Manifesto text */
+ .candidate-card p {
+   font-size: 14px;
+   color: #e6edf3;
+   margin: 8px 0;
+ }
+
+ /* Vote button inside card */
+ .candidate-card button {
+   background-color: #238636;
+   color: white;
+   font-weight: bold;
+   padding: 8px 14px;
+   border: none;
+   border-radius: 6px;
+   cursor: pointer;
+   transition: background 0.3s;
+ }
+
+ .candidate-card button:hover {
+   background-color: #2ea043;
+ }
+
+ /* Results Table */
+ .results-table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-top: 20px;
+   background-color: #1c2128;
+   border-radius: 10px;
+   overflow: hidden;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+ }
+
+ .results-table th,
+ .results-table td {
+   padding: 12px 16px;
+   text-align: left;
+   font-size: 15px;
+ }
+
+ .results-table thead {
+   background-color: #58a6ff;
+   color: white;
+   font-weight: bold;
+ }
+
+ .results-table tr:nth-child(even) {
+   background-color: #161b22;
+ }
+
+ .results-table tr:nth-child(odd) {
+   background-color: #0d1117;
+ }

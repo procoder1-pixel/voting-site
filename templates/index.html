@@ -1,40 +1,34 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="row g-4">
-  <div class="col-lg-7">
-    <div class="card p-4">
-      <h1 class="h3 mb-3">Welcome to VoteLive</h1>
-      <p class="mb-3">A transparent voting platform. Create an account, log in, and cast your vote. Watch live results update in real time.</p>
-      <div class="d-flex gap-2">
-        {% if not current_user.is_authenticated %}
-          <a href="{{ url_for('register') }}" class="btn btn-accent">Create Account</a>
-          <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-        {% else %}
-          <a href="{{ url_for('vote') }}" class="btn btn-accent">Go Vote</a>
-          <a href="{{ url_for('results') }}" class="btn btn-outline-light">See Results</a>
-        {% endif %}
-      </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voting Page</title>
+  <!-- Link to CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Welcome to the Voting System</h1>
+    <p>Select your preferred candidate below:</p>
+
+    <h2>Candidates</h2>
+    <ul>
+      {% for candidate in candidates %}
+      <li class="candidate-card">
+        <strong>{{ candidate.name }}</strong>
+        <p>{{ candidate.manifesto }}</p>
+        <form method="POST" action="/vote/{{ candidate.id }}">
+          <button type="submit">Vote</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p><a href="/results">View Results</a></p>
   </div>
-  <div class="col-lg-5">
-    <div class="card p-4">
-      <h2 class="h5">Election Status</h2>
-      <div class="stat mt-2">
-        <div class="d-flex justify-content-between">
-          <span>Election:</span>
-          <strong class="{{ 'text-success' if settings.is_open else 'text-warning' }}">{{ 'OPEN' if settings.is_open else 'CLOSED' }}</strong>
-        </div>
-        <div class="d-flex justify-content-between mt-2">
-          <span>Voters registered:</span>
-          <strong>{{ stats.users }}</strong>
-        </div>
-        <div class="d-flex justify-content-between mt-2">
-          <span>Total votes cast:</span>
-          <strong>{{ stats.votes }}</strong>
-        </div>
-      </div>
-      <a class="btn btn-outline-light mt-3 w-100" href="{{ url_for('results') }}">View Live Results</a>
-    </div>
-  </div>
-</div>
-{% endblock %}
+</body>
+
+</html>

@@ -1,60 +1,107 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row g-4">
-  <div class="col-lg-7">
-    <div class="card p-4">
-      <h1 class="h4 mb-3">Live Results</h1>
-      <canvas id="barChart" height="180"></canvas>
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card p-4">
+        <h1 class="h4 mb-3">Live Results</h1>
+        <!-- Canvas for Chart.js -->
+        <canvas id="resultsChart" height="220" style="width:100%;"></canvas>
+      </div>
     </div>
-  </div>
-  <div class="col-lg-5">
-    <div class="card p-4">
-      <h2 class="h5 mb-3">Turnout</h2>
-      <div class="stat">
-        <div class="d-flex justify-content-between">
-          <span>Registered voters</span><strong id="regCount">{{ stats.users }}</strong>
+
+    <div class="col-lg-5">
+      <div class="card p-4">
+        <h2 class="h5 mb-3">Turnout</h2>
+        <div class="stat">
+          <div class="d-flex justify-content-between">
+            <span>Registered voters</span><strong id="regCount">{{ stats.users }}</strong>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Total votes</span><strong id="voteCount">{{ stats.votes }}</strong>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span>Turnout</span><strong id="turnoutPct">0%</strong>
+          </div>
         </div>
-        <div class="d-flex justify-content-between mt-2">
-          <span>Total votes</span><strong id="voteCount">{{ stats.votes }}</strong>
-        </div>
-        <div class="d-flex justify-content-between mt-2">
-          <span>Turnout</span><strong id="turnoutPct">{{ '0%' }}</strong>
-        </div>
+        <a class="btn btn-outline-light mt-3 w-100" href="{{ url_for('vote') }}">Go Vote</a>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Chart.js (safe to include even if base.html already loads it) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-const ctx = document.getElementById('barChart');
-let chart;
+  document.addEventListener('DOMContentLoaded', function () {
+    let chartInstance = null;
 
-function render(data){
-  const labels = data.labels;
-  const counts = data.counts;
+    async function loadAndRender() {
+      try {
+        const resp = await fetch('/api/results', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('Network response was ' + resp.status);
+        const json = await resp.json();
 
-  if(chart){ chart.destroy(); }
-  chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels, 
-      datasets: [ { label: 'Votes', data: counts } ]
-    },
-    options: {
-      responsive: true,
-      scales: { y: { beginAtZero: true, precision: 0 } }
+        // json: { labels: [...], counts: [...], total_votes: number }
+        const labels = json.labels || [];
+        const counts = json.counts || [];
+        const totalVotes = ('total_votes' in json) ? json.total_votes : counts.reduce((a, b) => a + b, 0);
+
+        // Destroy previous chart if any
+        if (chartInstance) chartInstance.destroy();
+
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Votes',
+              data: counts,
+              backgroundColor: labels.map(() => '#58a6ff')
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Voting Results',
+                color: '#e6edf3',
+                font: { size: 16 }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#e6edf3' },
+                grid: { color: '#30363d' }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#e6edf3', precision: 0 },
+                grid: { color: '#30363d' }
+              }
+            }
+          }
+        });
+
+        // Update turnout numbers
+        document.getElementById('voteCount').textContent = totalVotes;
+        const reg = parseInt(document.getElementById('regCount').textContent) || 0;
+        const pct = reg ? Math.round((totalVotes / reg) * 100) : 0;
+        document.getElementById('turnoutPct').textContent = pct + '%';
+      } catch (err) {
+        console.error('Error loading chart data:', err);
+        // Optionally show user-friendly message somewhere on the page
+      }
     }
+
+    // initial load + poll every 5s
+    loadAndRender();
+    setInterval(loadAndRender, 5000);
   });
-
-  // turnout
-  const reg = {{ stats.users }};
-  const votes = data.total_votes;
-  const pct = reg ? Math.round((votes/reg)*100) : 0;
-  document.getElementById('regCount').textContent = reg;
-  document.getElementById('voteCount').textContent = votes;
-  document.getElementById('turnoutPct').textContent = pct + '%';
-}
-
-window.updateResults = render;
 </script>
 {% endblock %}
